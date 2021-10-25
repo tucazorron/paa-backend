@@ -2,5 +2,11 @@ development:
   clients:
     default:
       database: mongoid
-      hosts:
-        - localhost:27017
+      hosts: localhost:27017
+
+production:
+  clients:
+    default:
+      uri: mongodb+srv://CaioMassucato:webcrawlerpaa@cluster0.sas1m.mongodb.net/Webcrawler?retryWrites=true&w=majority
+      database: stackcrawler
+      collection: questions
