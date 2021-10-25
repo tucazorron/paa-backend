@@ -27,8 +27,8 @@ class QuestionsController < ApplicationController
       )
     )
 
-    first_list & second_list if words_list[1] == 'and'
-    first_list | second_list if words_list[1] == 'or'
-    first_list - second_list if words_list[1] == '-'
+    return first_list & second_list if words_list[1] == 'and'
+    return first_list | second_list if words_list[1] == 'or'
+    return first_list - second_list if words_list[1] == '-'
   end
 end
