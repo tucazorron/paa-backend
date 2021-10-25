@@ -12,23 +12,36 @@ class QuestionsController < ApplicationController
 
   def mount_urls(words_list)
     words_list.each do |w|
-      mount_urls(w) if w.instance_of?(Array)
+      w = mount_urls(w) if w.instance_of?(Array)
     end
 
-    first_list = Question.all.where(
-      title: [:title].include?(
-        words_list[0]
-      )
-    )
+    if words_list[0].instance_of?(String)
+      first_list = Question.where(
+        {
+          title: {
+            '$regex': words_list[0]
+          }
+        }
+      ).all
+    end
 
-    second_list = Question.all.where(
-      title: [:title].include?(
-        words_list[2]
-      )
-    )
+    if words_list[2].instance_of?(String)
+      second_list = Question.where(
+        {
+          title: {
+            '$regex': words_list[2]
+          }
+        }
+      ).all
+    end
 
-    return first_list & second_list if words_list[1] == 'and'
-    return first_list | second_list if words_list[1] == 'or'
-    return first_list - second_list if words_list[1] == '-'
+    puts first_list
+    puts second_list
+
+    w = first_list.to_a & second_list.to_a if words_list[1] == 'and'
+    w = first_list.to_a | second_list.to_a if words_list[1] == 'or'
+    w = first_list.to_a - second_list.to_a if words_list[1] == '-'
+
+    w
   end
 end

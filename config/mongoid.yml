@@ -2,16 +2,8 @@ development:
   clients:
     default:
       uri: mongodb+srv://CaioMassucato:webcrawlerpaa@cluster0.sas1m.mongodb.net/stackcrawler?retryWrites=true&w=majority
-      collection: questions
-      options:
-        skip_version_check: true
-        safe: true
 
 production:
   clients:
     default:
       uri: mongodb+srv://CaioMassucato:webcrawlerpaa@cluster0.sas1m.mongodb.net/stackcrawler?retryWrites=true&w=majority
-      collection: questions
-      options:
-        skip_version_check: true
-        safe: true
