@@ -2,6 +2,7 @@ development:
   clients:
     default:
       uri: mongodb+srv://CaioMassucato:webcrawlerpaa@cluster0.sas1m.mongodb.net/stackcrawler?retryWrites=true&w=majority
+      
 
 production:
   clients:
