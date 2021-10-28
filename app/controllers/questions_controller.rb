@@ -4,8 +4,7 @@ class QuestionsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    data_tree = params[:data_tree]
-    @data_tree = mount_urls(data_tree)
+    @data_tree = mount_urls(params[:data_tree])
     render json: @data_tree,
            status: :ok
   end
@@ -17,13 +16,13 @@ class QuestionsController < ApplicationController
       mount_urls(element) if element.instance_of?(Array)
     end
 
-    get_urls_list(data_tree[0]) if data_tree[0].instance_of?(String)
-    get_urls_list(data_tree[2]) if data_tree[2].instance_of?(String)
+    array1 = get_urls_array(data_tree[0]) if data_tree[0].instance_of?(String)
+    array2 = get_urls_array(data_tree[2]) if data_tree[2].instance_of?(String)
 
-    operate_lists(data_tree[1])
+    operate_arrays(array1, data_tree[1], array2)
   end
 
-  def get_urls_list(word)
+  def get_urls_array(word)
     Question.where(
       {
         title: {
@@ -33,9 +32,9 @@ class QuestionsController < ApplicationController
     ).all
   end
 
-  def operate_lists(operator)
-    return element1.to_a & element2.to_a if operator == 'and'
-    return element1.to_a | element2.to_a if operator == 'or'
-    return element1.to_a - element2.to_a if operator == '-'
+  def operate_arrays(array1, operator, array2)
+    return array1.to_a & array2.to_a if operator == 'and'
+    return array1.to_a | array2.to_a if operator == 'or'
+    return array1.to_a - array2.to_a if operator == '-'
   end
 end
