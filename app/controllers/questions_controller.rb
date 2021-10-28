@@ -1,47 +1,41 @@
+# frozen_string_literal: true
+
 class QuestionsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    words_list = params[:words_list]
-    @words_list = mount_urls(words_list)
-    render json: @words_list,
+    data_tree = params[:data_tree]
+    @data_tree = mount_urls(data_tree)
+    render json: @data_tree,
            status: :ok
   end
 
   private
 
-  def mount_urls(words_list)
-    words_list.each do |w|
-      w = mount_urls(w) if w.instance_of?(Array)
+  def mount_urls(data_tree)
+    data_tree.each do |element|
+      mount_urls(element) if element.instance_of?(Array)
     end
 
-    if words_list[0].instance_of?(String)
-      first_list = Question.where(
-        {
-          title: {
-            '$regex': words_list[0]
-          }
+    get_urls_list(data_tree[0]) if data_tree[0].instance_of?(String)
+    get_urls_list(data_tree[2]) if data_tree[2].instance_of?(String)
+
+    operate_lists(data_tree[1])
+  end
+
+  def get_urls_list(word)
+    Question.where(
+      {
+        title: {
+          '$regex': word
         }
-      ).all
-    end
+      }
+    ).all
+  end
 
-    if words_list[2].instance_of?(String)
-      second_list = Question.where(
-        {
-          title: {
-            '$regex': words_list[2]
-          }
-        }
-      ).all
-    end
-
-    puts first_list
-    puts second_list
-
-    w = first_list.to_a & second_list.to_a if words_list[1] == 'and'
-    w = first_list.to_a | second_list.to_a if words_list[1] == 'or'
-    w = first_list.to_a - second_list.to_a if words_list[1] == '-'
-
-    w
+  def operate_lists(operator)
+    return element1.to_a & element2.to_a if operator == 'and'
+    return element1.to_a | element2.to_a if operator == 'or'
+    return element1.to_a - element2.to_a if operator == '-'
   end
 end
